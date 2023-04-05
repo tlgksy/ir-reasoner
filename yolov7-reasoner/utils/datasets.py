@@ -581,7 +581,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
             #img, labels = self.albumentations(img, labels)
 
             # Augment colorspace
-            augment_hsv(img, hgain=hyp['hsv_h'], sgain=hyp['hsv_s'], vgain=hyp['hsv_v'])
+            #augment_hsv(img, hgain=hyp['hsv_h'], sgain=hyp['hsv_s'], vgain=hyp['hsv_v'])
 
             # Apply cutouts
             # if random.random() < 0.9:
@@ -668,8 +668,15 @@ def load_image(self, index):
     img = self.imgs[index]
     if img is None:  # not cached
         path = self.img_files[index]
-        img = cv2.imread(path)  # BGR
-        assert img is not None, 'Image Not Found ' + path
+        im = cv2.imread(path, -1)  # IR
+        assert im is not None, 'Image Not Found ' + path
+        
+        if im.ndim < 3:
+            img = np.zeros((im.shape[0], im.shape[1], 3), dtype=np.int16)
+            for i in range(3):
+                img[:, :, i] = im
+        else:
+            img = im
         h0, w0 = img.shape[:2]  # orig hw
         r = self.img_size / max(h0, w0)  # resize image to img_size
         if r != 1:  # always resize down, only resize up if training with augmentation
@@ -718,7 +725,7 @@ def load_mosaic(self, index):
 
         # place img in img4
         if i == 0:  # top left
-            img4 = np.full((s * 2, s * 2, img.shape[2]), 114, dtype=np.uint8)  # base image with 4 tiles
+            img4 = np.full((s * 2, s * 2, img.shape[2]),(114 if self.hist==2**8 else 7324), dtype=np.int16)  # base image with 4 tiles
             x1a, y1a, x2a, y2a = max(xc - w, 0), max(yc - h, 0), xc, yc  # xmin, ymin, xmax, ymax (large image)
             x1b, y1b, x2b, y2b = w - (x2a - x1a), h - (y2a - y1a), w, h  # xmin, ymin, xmax, ymax (small image)
         elif i == 1:  # top right
@@ -776,7 +783,7 @@ def load_mosaic9(self, index):
 
         # place img in img9
         if i == 0:  # center
-            img9 = np.full((s * 3, s * 3, img.shape[2]), 114, dtype=np.uint8)  # base image with 4 tiles
+            img9 = np.full((s * 3, s * 3, img.shape[2]), (114 if self.hist==2**8 else 7324), dtype=np.int16)  # base image with 4 tiles
             h0, w0 = h, w
             c = s, s, s + w, s + h  # xmin, ymin, xmax, ymax (base) coordinates
         elif i == 1:  # top
@@ -853,7 +860,7 @@ def load_samples(self, index):
 
         # place img in img4
         if i == 0:  # top left
-            img4 = np.full((s * 2, s * 2, img.shape[2]), 114, dtype=np.uint8)  # base image with 4 tiles
+            img4 = np.full((s * 2, s * 2, img.shape[2]), (114 if self.hist==2**8 else 7324), dtype=np.int16)  # base image with 4 tiles
             x1a, y1a, x2a, y2a = max(xc - w, 0), max(yc - h, 0), xc, yc  # xmin, ymin, xmax, ymax (large image)
             x1b, y1b, x2b, y2b = w - (x2a - x1a), h - (y2a - y1a), w, h  # xmin, ymin, xmax, ymax (small image)
         elif i == 1:  # top right
