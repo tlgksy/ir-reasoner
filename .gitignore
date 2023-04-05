@@ -1,0 +1,4 @@
+.idea\
+*.xml
+\.idea
+.DS_Store
