@@ -23,12 +23,12 @@ FLIR ADAS
 
 ```bibtex
 @InProceedings{IR-Reasoner,
-    author    = {Gundogan, Meryem Mine and Aksoy, Tolga and Temizel, Alptekin and Halici, Ugur},
-    title     = {IR Reasoner: Real-time Infrared Object Detection by Visual Reasoning},
+    author    = {G\"undo\u{g}an, Meryem Mine and Aksoy, Tolga and Temizel, Alptekin and Halici, Ugur},
+    title     = {IR Reasoner: Real-Time Infrared Object Detection by Visual Reasoning},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
     month     = {June},
     year      = {2023},
-    pages     = {-}
+    pages     = {422-430}
 }
 ```
 
